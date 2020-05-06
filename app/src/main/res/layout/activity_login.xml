@@ -1,0 +1,159 @@
+
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/white"
+tools:context=".activity.LoginActivity"
+    android:scrollbars="vertical"
+
+android:id="@+id/rootAuth">
+
+
+
+
+    <ImageView
+    android:id="@+id/appicon"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="100dp"
+    android:src="@drawable/logo" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:layout_below="@id/appicon"
+        android:layout_marginTop="10dp"
+        android:textSize="28sp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:id="@+id/txtView"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/phoneNumberCountryLayout"
+        android:layout_below="@id/txtView"
+        android:layout_marginLeft="16dp"
+        app:hintEnabled="false"
+        android:layout_marginTop="40dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint=""
+            android:padding="16dp"
+            android:background="@drawable/rectangle_phone_"
+            android:text="+91"
+
+            android:textSize="18sp"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtView"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="5dp"
+        android:id="@+id/phoneLayout"
+        android:layout_marginRight="16dp"
+        android:layout_toRightOf="@id/phoneNumberCountryLayout"
+        app:hintEnabled="false"
+
+        >
+
+
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:id="@+id/phoneNumber"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:textSize="18sp"
+            android:background="@drawable/rectangle_phone_"
+            android:textColor="@color/colorPrimaryDark"
+            android:hint="Phone" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/phoneLayout"
+        android:id="@+id/passwordLayout"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/colorPrimaryDark"
+        app:hintEnabled="false"
+
+        >
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:id="@+id/password"
+            android:padding="16dp"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="@drawable/rround_corner_edit"
+            android:hint="Password" />
+    </android.support.design.widget.TextInputLayout>
+    <TextView
+        android:id="@+id/regText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        android:textColor="#6495ED"
+        android:layout_below="@+id/passwordLayout"
+        android:textAlignment="textEnd"
+        android:textStyle="bold"
+        android:layout_marginLeft="16dp"
+        android:padding="16dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_marginRight="16dp"
+        android:text="@string/registeruser" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="40dp"
+        android:id="@+id/loginButton"
+        android:textSize="18sp"
+        android:textAllCaps="true"
+        android:layout_height="wrap_content"
+        android:background="@drawable/auth_button_bg"
+        android:text="Log in "
+
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_below="@id/regText"
+
+        android:padding="16dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+
+
+      />
+
+
+
+
+
+
+</RelativeLayout>
+
+
+

@@ -2,7 +2,9 @@
 package com.cricket.quiz.fragment;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.cricket.quiz.activity.DescriptionView;
 import com.cricket.quiz.activity.MainActivity;
 import com.cricket.quiz.R;
 import com.cricket.quiz.activity.SettingActivity;
@@ -39,6 +42,7 @@ import com.cricket.quiz.helper.StaticUtils;
 import com.cricket.quiz.helper.Utils;
 import com.cricket.quiz.model.Level;
 import com.cricket.quiz.model.Question;
+import com.crowdfire.cfalertdialog.CFAlertDialog;
 
 
 import org.json.JSONArray;
@@ -307,13 +311,82 @@ public class FragmentLock extends Fragment {
 
                     if (levelNo >= position + 1) {
                         if (question.size() >= Constant.MAX_QUESTION_PER_LEVEL) {
-                            FragmentPlay fragmentPlay = new FragmentPlay();
-                            FragmentTransaction ft = ((MainActivity) activity).getSupportFragmentManager().beginTransaction();
-                            ft.replace(R.id.fragment_container, fragmentPlay, "fragment");
-                            ft.addToBackStack("tag");
-                            ft.commit();
+                            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+                                            progressDialog.setMessage("Please wait....");
+                                            progressDialog.show();
+
+                            StringRequest strReq = new StringRequest(Request.Method.POST, Constant.DESCRIPTION_URL, new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
+                                        JSONObject obj = new JSONObject(response);
+                                        boolean error = obj.getBoolean("error");
+                                        String message = obj.getString("message");
+                                        String dataStr=obj.getJSONObject("data").getString("content");
+
+                                        if (error==false) {
+                                            progressDialog.dismiss();
+
+                                            CFAlertDialog.Builder builder = new CFAlertDialog.Builder(getContext())
+                                                    .setDialogStyle(CFAlertDialog.CFAlertStyle.BOTTOM_SHEET)
+                                                    .setTitle("Description")
+                                                    .setMessage(dataStr)
+                                                    .addButton("START QUIZ", getResources().getColor(R.color.white), getResources().getColor(R.color.colorPrimaryDark), CFAlertDialog.CFAlertActionStyle.POSITIVE, CFAlertDialog.CFAlertActionAlignment.JUSTIFIED, new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+
+                                                            dialog.dismiss();
+                                                            FragmentPlay fragmentPlay = new FragmentPlay();
+                                                            FragmentTransaction ft = ((MainActivity) activity).getSupportFragmentManager().beginTransaction();
+                                                            ft.replace(R.id.fragment_container, fragmentPlay, "fragment");
+                                                            ft.addToBackStack("tag");
+                                                            ft.commit();
+
+                                                        }
+                                                    });
+
+// Show the alert
+                                            builder.show();
+
+                                        } else {
+                                            Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                                        }
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+
+                                }
+
+                            }) {
+                                @Override
+                                protected Map<String, String> getParams() {
+
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put(Constant.accessKey, Constant.accessKeyValue);
+                                    params.put(Constant.getLearningDocument, "1");
+                                    params.put(Constant.subCategory, "157");
+                                    params.put(Constant.level, "1");
+
+                                    return params;
+
+                                }
+                            };
+
+                            AppController.getInstance().getRequestQueue().getCache().clear();
+                            AppController.getInstance().addToRequestQueue(strReq);
+
+
+
+
                         } else {
                             Toast.makeText(mContext, getString(R.string.no_enough_question), Toast.LENGTH_SHORT).show();
+
                         }
                     } else {
                         Toast.makeText(activity, "Level is Locked", Toast.LENGTH_SHORT).show();

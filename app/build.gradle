@@ -41,6 +41,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.android.volley:volley:1.1.0'
+    implementation 'com.crowdfire.cfalertdialog:cfalertdialog:1.1.0'
 
     // Add the itextpdf dependency:
     implementation 'com.itextpdf:itextpdf:5.5.13'

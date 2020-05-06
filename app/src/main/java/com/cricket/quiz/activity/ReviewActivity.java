@@ -104,6 +104,7 @@ public class ReviewActivity extends AppCompatActivity {
         tvLevel.setText(getString(R.string.review_answer));
         reviews = FragmentPlay.reviews;
         Utils.displayInterstitial();
+
         ReviewQuestion();
         prev.setOnClickListener(new View.OnClickListener() {
             @Override

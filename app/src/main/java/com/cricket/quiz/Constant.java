@@ -7,6 +7,9 @@ public class Constant {
     public static String QUIZ_URL = "http://testquiz.goit.in/Quiz_PHP_code/api-v2.php"; // admin page url
 
     public static String DEVICE_REGISTRATION_API = "http://testquiz.goit.in/Quiz_PHP_code/RegisterDevice.php";
+    public static String LOGIN_URL="https://testquiz.goit.in/Quiz_PHP_code/api-v2.php";
+    public static String REGISTER_URL="https://testquiz.goit.in/Quiz_PHP_code/api-v2.php";
+    public static final String DESCRIPTION_URL ="https://testquiz.goit.in/Quiz_PHP_code/api-v2.php" ;
 
     /////// PARAMETERS  ///////
     public static String accessKey = "access_key";
@@ -80,4 +83,18 @@ public class Constant {
     public static int giveTwoCoins = 2; //give  coins when user give 40 to 50 percent correct answer
     public static int giveThreeCoins = 3; //give  coin when user give 50 to 60 percent correct answer
     public static int giveFourCoins = 4;  //give  coin when user give > 60  percent correct answer
+
+   /////----- login and register------///
+    public static String login="login";
+    public static String mobile="mobile";
+    public static String password="password";
+    public static String registration="registration";
+    public static String name="name";
+    public static String district="district";
+    public static String state="state";
+
+    /////----- description view------///
+    public static String getLearningDocument="get_learing_document";
+    public static String subCategory="subcategory";
+    public static String level="level";
 }

@@ -97,6 +97,13 @@ public class MainActivity extends AppCompatActivity implements FragmentPlay.Call
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        SharedPreferences sharedPreferences=getSharedPreferences("User.pref",MODE_PRIVATE);
+        if(sharedPreferences.getBoolean("Logedin",false)==false){
+            finish();
+            startActivity(new Intent(MainActivity.this,LoginActivity.class));
+        }
+
         try {
             dbHelper = new DBHelper(getApplicationContext());
             bookmarkDBHelper = new BookmarkDBHelper(getApplicationContext());

@@ -28,6 +28,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.DescriptionView"></activity>
+        <activity android:name=".activity.RegisterActivity" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
@@ -71,20 +76,15 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".activity.ReviewActivity" />
-        <activity android:name=".activity.AboutUs" />
-
-        <!-- Firebase Notifications -->
-
+        <activity android:name=".activity.AboutUs" /> <!-- Firebase Notifications -->
         <service android:name=".service.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-
-        <!-- ./Firebase Notifications -->
+        </service> <!-- ./Firebase Notifications -->
         <activity android:name=".activity.BookmarkList" />
         <activity android:name=".activity.PrivacyPolicy" />
-        <activity android:name=".activity.BookmarkPlay"></activity>
+        <activity android:name=".activity.BookmarkPlay" />
     </application>
 
 </manifest>

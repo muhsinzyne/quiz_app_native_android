@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -131,6 +132,9 @@ public class FragmentPlay extends Fragment implements OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_play, container, false);
         fragmentComplete = new FragmentComplete();
+
+        Log.d("FragmentPlay",getActivity().getPackageName());
+
         final int[] CLICKABLE = new int[]{R.id.a_layout, R.id.b_layout, R.id.c_layout, R.id.d_layout};
 
         for (int i : CLICKABLE) {
@@ -158,6 +162,7 @@ public class FragmentPlay extends Fragment implements OnClickListener {
         progressTimer = (CircularProgressIndicator) v.findViewById(R.id.progressBarTwo);
         progressTimer.setMaxProgress(Constant.CIRCULAR_MAX_PROGRESS);
         progressTimer.setCurrentProgress(Constant.CIRCULAR_MAX_PROGRESS);
+
         try {
             interstitial = new InterstitialAd(getActivity());
             interstitial.setAdUnitId(getString(R.string.admob_interstitial_id));
