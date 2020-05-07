@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +70,7 @@ public class FragmentLock extends Fragment {
     public ProgressBar progressBar;
     public static ArrayList<Question> questionList;
     public CoordinatorLayout layout;
+    private Activity activityC;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -138,7 +141,33 @@ public class FragmentLock extends Fragment {
         });
 
 
+        Log.d("quiz_log","On create called");
+
+
+        SharedPreferences sharedPreferences=getContext().getSharedPreferences("START",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor =sharedPreferences.edit();
+        editor.putString("GAME_START","NO");
+        editor.commit();
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("quiz_log","On resume called");
+
+
+        SharedPreferences sharedPreferences=getContext().getSharedPreferences("START",Context.MODE_PRIVATE);
+        String DATA=sharedPreferences.getString("GAME_START","NO");
+        if(DATA.contentEquals("YES")){
+            FragmentPlay fragmentPlay = new FragmentPlay();
+            FragmentTransaction ft = ((MainActivity) activityC).getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_container, fragmentPlay, "fragment");
+            ft.addToBackStack("tag");
+            ft.commit();
+        }
+
     }
 
     private void getData() {
@@ -311,80 +340,84 @@ public class FragmentLock extends Fragment {
 
                     if (levelNo >= position + 1) {
                         if (question.size() >= Constant.MAX_QUESTION_PER_LEVEL) {
-                            final ProgressDialog progressDialog = new ProgressDialog(getContext());
-                                            progressDialog.setMessage("Please wait....");
-                                            progressDialog.show();
-
-                            StringRequest strReq = new StringRequest(Request.Method.POST, Constant.DESCRIPTION_URL, new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    try {
-                                        JSONObject obj = new JSONObject(response);
-                                        boolean error = obj.getBoolean("error");
-                                        String message = obj.getString("message");
-                                        String dataStr=obj.getJSONObject("data").getString("content");
-
-                                        if (error==false) {
-                                            progressDialog.dismiss();
-
-                                            CFAlertDialog.Builder builder = new CFAlertDialog.Builder(getContext())
-                                                    .setDialogStyle(CFAlertDialog.CFAlertStyle.BOTTOM_SHEET)
-                                                    .setTitle("Description")
-                                                    .setMessage(dataStr)
-                                                    .addButton("START QUIZ", getResources().getColor(R.color.white), getResources().getColor(R.color.colorPrimaryDark), CFAlertDialog.CFAlertActionStyle.POSITIVE, CFAlertDialog.CFAlertActionAlignment.JUSTIFIED, new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialog, int which) {
-
-                                                            dialog.dismiss();
-                                                            FragmentPlay fragmentPlay = new FragmentPlay();
-                                                            FragmentTransaction ft = ((MainActivity) activity).getSupportFragmentManager().beginTransaction();
-                                                            ft.replace(R.id.fragment_container, fragmentPlay, "fragment");
-                                                            ft.addToBackStack("tag");
-                                                            ft.commit();
-
-                                                        }
-                                                    });
-
-// Show the alert
-                                            builder.show();
-
-                                        } else {
-                                            Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                                        }
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }, new Response.ErrorListener() {
-
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-
-                                }
-
-                            }) {
-                                @Override
-                                protected Map<String, String> getParams() {
-
-                                    Map<String, String> params = new HashMap<String, String>();
-                                    params.put(Constant.accessKey, Constant.accessKeyValue);
-                                    params.put(Constant.getLearningDocument, "1");
-                                    params.put(Constant.subCategory, "157");
-                                    params.put(Constant.level, "1");
-
-                                    return params;
-
-                                }
-                            };
-
-                            AppController.getInstance().getRequestQueue().getCache().clear();
-                            AppController.getInstance().addToRequestQueue(strReq);
-
-
-
-
-                        } else {
+                            activityC=activity;
+//                            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+//                                            progressDialog.setMessage("Please wait....");
+//                                            progressDialog.show();
+//
+//                            StringRequest strReq = new StringRequest(Request.Method.POST, Constant.DESCRIPTION_URL, new Response.Listener<String>() {
+//                                @Override
+//                                public void onResponse(String response) {
+//                                    try {
+//                                        JSONObject obj = new JSONObject(response);
+//                                        boolean error = obj.getBoolean("error");
+//                                        String message = obj.getString("message");
+//                                        String dataStr=obj.getJSONObject("data").getString("content");
+//
+//                                        if (error==false) {
+//                                            progressDialog.dismiss();
+//
+//                                            CFAlertDialog.Builder builder = new CFAlertDialog.Builder(getContext())
+//                                                    .setDialogStyle(CFAlertDialog.CFAlertStyle.BOTTOM_SHEET)
+//                                                    .setTitle("Description")
+//                                                    .setMessage(dataStr)
+//                                                    .addButton("START QUIZ", getResources().getColor(R.color.white), getResources().getColor(R.color.colorPrimaryDark), CFAlertDialog.CFAlertActionStyle.POSITIVE, CFAlertDialog.CFAlertActionAlignment.JUSTIFIED, new DialogInterface.OnClickListener() {
+//                                                        @Override
+//                                                        public void onClick(DialogInterface dialog, int which) {
+//
+//                                                            dialog.dismiss();
+//                                                            FragmentPlay fragmentPlay = new FragmentPlay();
+//                                                            FragmentTransaction ft = ((MainActivity) activity).getSupportFragmentManager().beginTransaction();
+//                                                            ft.replace(R.id.fragment_container, fragmentPlay, "fragment");
+//                                                            ft.addToBackStack("tag");
+//                                                            ft.commit();
+//
+//                                                        }
+//                                                    });
+//
+//// Show the alert
+//                                            builder.show();
+//
+//                                        } else {
+//                                            Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+//                                        }
+//
+//                                    } catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+//                            }, new Response.ErrorListener() {
+//
+//                                @Override
+//                                public void onErrorResponse(VolleyError error) {
+//
+//                                }
+//
+//                            }) {
+//                                @Override
+//                                protected Map<String, String> getParams() {
+//
+//                                    Map<String, String> params = new HashMap<String, String>();
+//                                    params.put(Constant.accessKey, Constant.accessKeyValue);
+//                                    params.put(Constant.getLearningDocument, "1");
+//                                    params.put(Constant.subCategory, "157");
+//                                    params.put(Constant.level, "1");
+//
+//                                    return params;
+//
+//                                }
+//                            };
+//
+//                            AppController.getInstance().getRequestQueue().getCache().clear();
+//                            AppController.getInstance().addToRequestQueue(strReq);
+//
+//
+//
+//
+                            Intent i=new Intent(activity,DescriptionView.class);
+                            i.putExtra("LEVEL",levelNo);
+                            startActivity(i);
+                           } else {
                             Toast.makeText(mContext, getString(R.string.no_enough_question), Toast.LENGTH_SHORT).show();
 
                         }

@@ -1,7 +1,13 @@
 package com.cricket.quiz.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -18,8 +24,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.cricket.quiz.Constant;
 import com.cricket.quiz.R;
+import com.cricket.quiz.fragment.FragmentPlay;
 import com.cricket.quiz.helper.AppController;
 import com.cricket.quiz.helper.Utils;
+import com.crowdfire.cfalertdialog.CFAlertDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,10 +39,10 @@ public class DescriptionView extends AppCompatActivity {
 
     public ProgressBar prgLoading;
     public WebView mWebView;
-    public String activity;
+    public Activity activity;
     public ImageView back,setting;
     public TextView tvTitle;
-
+    public int LEVEL;
 
     @SuppressLint({"SetJavaScriptEnabled", "NewApi"})
     @Override
@@ -42,13 +50,13 @@ public class DescriptionView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description_view);
 
-        activity = getIntent().getStringExtra("activity");
+
         prgLoading = (ProgressBar) findViewById(R.id.prgLoading);
         mWebView = (WebView) findViewById(R.id.webView1);
         setting=(ImageView)findViewById(R.id.setting) ;
         back = (ImageView) findViewById(R.id.back);
         tvTitle=(TextView)findViewById(R.id.tvLevel);
-        tvTitle.setText(getString(R.string.privacy_policy));
+        tvTitle.setText("Quiz Description");
         setting.setVisibility(View.GONE);
         try {
             if (Utils.isNetworkAvailable(this)) {
@@ -56,7 +64,7 @@ public class DescriptionView extends AppCompatActivity {
                 mWebView.setFocusableInTouchMode(true);
                 mWebView.getSettings().setJavaScriptEnabled(true);
 
-                GetPrivacyAndTerms();
+                GetDescriptionView();
 
             }
         } catch (Exception e) {
@@ -69,29 +77,57 @@ public class DescriptionView extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+
+        findViewById(R.id.submitButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPreferences=getSharedPreferences("START", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor =sharedPreferences.edit();
+                editor.putString("GAME_START","YES");
+                editor.commit();
+
+                launchPlay();
+            }
+        });
+
+
     }
 
-    public void GetPrivacyAndTerms() {
+    public void GetDescriptionView() {
         if (!prgLoading.isShown()) {
             prgLoading.setVisibility(View.VISIBLE);
         }
+
+
         StringRequest strReq = new StringRequest(Request.Method.POST, Constant.DESCRIPTION_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
+                prgLoading.setVisibility(View.GONE);
                 try {
                     JSONObject obj = new JSONObject(response);
-                    if (obj.getString("error").equals("false")) {
+                    boolean error = obj.getBoolean("error");
+                    String message = obj.getString("message");
+                    String dataStr=obj.getJSONObject("data").getString("content");
 
 
-                        String privacyStr = obj.getString("data");
+                    if (error==false) {
+
+                        if(dataStr.isEmpty()){
+                            dataStr ="No specific description";
+                        }
+
                         mWebView.setVerticalScrollBarEnabled(true);
-                        mWebView.loadDataWithBaseURL("", privacyStr, "text/html", "UTF-8", "");
+                        mWebView.loadDataWithBaseURL("", dataStr, "text/html", "UTF-8", "");
                         mWebView.setBackgroundColor(getResources().getColor(R.color.white));
+
+
 
                     } else {
                         Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                     }
-                    prgLoading.setVisibility(View.GONE);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -100,16 +136,17 @@ public class DescriptionView extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                prgLoading.setVisibility(View.GONE);
+
             }
 
         }) {
             @Override
             protected Map<String, String> getParams() {
+
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(Constant.accessKey, Constant.accessKeyValue);
                 params.put(Constant.getLearningDocument, "1");
-                params.put(Constant.subCategory, "1");
+                params.put(Constant.subCategory, "157");
                 params.put(Constant.level, "1");
 
                 return params;
@@ -120,7 +157,13 @@ public class DescriptionView extends AppCompatActivity {
         AppController.getInstance().getRequestQueue().getCache().clear();
         AppController.getInstance().addToRequestQueue(strReq);
 
+
+
+
+    }
         // }
+    private void launchPlay(){
+       onBackPressed();
     }
 
     @SuppressLint("NewApi")
@@ -173,5 +216,7 @@ public class DescriptionView extends AppCompatActivity {
         super.onBackPressed();
 
     }
+
+
 }
 
