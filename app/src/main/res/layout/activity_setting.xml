@@ -332,19 +332,54 @@
                             android:textColor="@color/light_black"
                             android:textStyle="bold" />
                     </RelativeLayout>
+                    <View
+                        android:id="@+id/divider14"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/rate_layout"
+                        android:background="@drawable/drop_shadow" />
+                    <RelativeLayout
+                        android:id="@+id/logout_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/divider14"
+                        android:onClick="viewClickHandler"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:id="@+id/logout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+
+                            android:tint="@color/colorPrimaryDark"
+                            app:srcCompat="@drawable/ic_power_settings_new_black_24dp" />
+
+                        <TextView
+                            android:id="@+id/logout_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_toEndOf="@+id/logout"
+                            android:padding="10dp"
+                            android:text="@string/logout"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/light_black"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
 
                     <View
                         android:id="@+id/divider12"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_below="@+id/rate_layout"
+                        android:layout_below="@+id/divider14"
                         android:background="@drawable/drop_shadow" />
 
                     <RelativeLayout
                         android:id="@+id/Ok_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/divider12"
+                        android:layout_below="@+id/logout_layout"
                         android:background="@color/bottom_bg_color"
                         android:onClick="viewClickHandler">
 

@@ -232,6 +232,15 @@ public class SettingActivity extends AppCompatActivity {
             case R.id.ok:
                 onBackPressed();
                 break;
+            case R.id.logout_layout:
+                finishAffinity();
+                SharedPreferences sharedPreferences=getSharedPreferences("User.pref",MODE_PRIVATE);
+                SharedPreferences.Editor editor=sharedPreferences.edit();
+                editor.putBoolean("Logedin",false);
+                editor.commit();
+                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                break;
+
         }
     }
 
